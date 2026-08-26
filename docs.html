@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusPay Developer Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --bg-body: #ffffff;
+            --bg-sidebar: #f9fafb;
+            --border: #e5e7eb;
+            --code-bg: #111827;
+            --code-text: #e5e7eb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            padding: 32px 24px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-group { margin-bottom: 24px; }
+        .nav-group h3 { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; letter-spacing: 0.05em; margin-bottom: 12px; }
+        .nav-link { display: block; text-decoration: none; color: var(--text-main); font-size: 0.95rem; margin-bottom: 10px; padding: 6px 12px; border-radius: 6px; transition: background 0.2s; }
+        .nav-link:hover { background-color: #f3f4f6; color: var(--primary); }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 48px 64px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
+        h2 { font-size: 1.5rem; font-weight: 600; margin-top: 48px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        h3 { font-size: 1.25rem; font-weight: 600; margin-top: 32px; margin-bottom: 12px; }
+        
+        p { font-size: 1rem; line-height: 1.6; color: var(--text-muted); margin-bottom: 16px; }
+        
+        .badge { display: inline-block; padding: 4px 8px; background: #e0e7ff; color: var(--primary); font-size: 0.75rem; font-weight: 600; border-radius: 4px; margin-right: 8px; vertical-align: middle; }
+        .method-post { background: #dcfce7; color: #166534; }
+        .method-get { background: #dbeafe; color: #1e40af; }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        code { font-family: 'Fira Code', monospace; }
+        p code, li code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.875rem; color: #ef4444; }
+
+        .table-container { width: 100%; overflow-x: auto; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { font-size: 0.875rem; color: var(--text-main); padding: 12px; border-bottom: 2px solid var(--border); }
+        td { font-size: 0.95rem; color: var(--text-muted); padding: 12px; border-bottom: 1px solid var(--border); }
+        td strong { color: var(--text-main); font-weight: 600; }
+
+        .info-box { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 16px; margin-bottom: 24px; border-radius: 0 8px 8px 0; }
+        .info-box h4 { color: #166534; margin-bottom: 8px; }
+        .info-box p { color: #15803d; margin: 0; font-size: 0.95rem; }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            NexusPay Docs
+        </div>
+
+        <div class="nav-group">
+            <h3>Get Started</h3>
+            <a href="#overview" class="nav-link">Overview</a>
+            <a href="#quickstart" class="nav-link">Quickstart Guide</a>
+        </div>
+
+        <div class="nav-group">
+            <h3>API Reference</h3>
+            <a href="#create-session" class="nav-link">Create a Session</a>
+            <a href="#retrieve-session" class="nav-link">Retrieve a Session</a>
+        </div>
+
+        <div class="nav-group">
+            <h3>Testing</h3>
+            <a href="#test-cards" class="nav-link">Mock Credit Cards</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <section id="overview">
+            <h1>NexusPay Hosted Checkout</h1>
+            <p>Welcome to the NexusPay developer documentation. NexusPay is a secure, highly-converting payment gateway designed to help you accept payments instantly without the burden of PCI compliance.</p>
+            <p>Our Hosted Checkout solution redirects your customers to our secure, bank-grade payment pages, processes their card, and redirects them back to your application.</p>
+        </section>
+
+        <section id="quickstart">
+            <h2>Quickstart Guide</h2>
+            <p>Integrating NexusPay takes less than 5 minutes. Follow this standard workflow:</p>
+            <ol style="margin-left: 20px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
+                <li>Your customer clicks "Buy Now" on your product page.</li>
+                <li>Your backend makes an API call to <code>POST /api/checkout/sessions</code> to define what the customer is buying.</li>
+                <li>NexusPay returns a secure <code>url</code>.</li>
+                <li>You redirect the customer to that <code>url</code>.</li>
+                <li>NexusPay handles the credit card collection and securely redirects the user back to your success page.</li>
+            </ol>
+            
+            <h3>Example Integration (JavaScript)</h3>
+            <pre><code>// On your frontend when "Buy Now" is clicked:
+const baseUrl = window.location.origin;
+const response = await fetch('/api/checkout/sessions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        line_items: [{ 
+            price_data: { unit_amount: 9900 } // Amount in cents ($99.00)
+        }],
+        success_url: `${baseUrl}/success.html`,
+        cancel_url: `${baseUrl}/cancel.html`
+    })
+});
+
+const session = await response.json();
+// Redirect customer to NexusPay Hosted Checkout
+window.location.href = session.url;</code></pre>
+        </section>
+
+        <section id="create-session">
+            <h2><span class="badge method-post">POST</span> Create a Checkout Session</h2>
+            <p>Creates a new payment session. You must call this from your server or frontend to initiate a transaction.</p>
+            <p><strong>Endpoint:</strong> <code>/api/checkout/sessions</code></p>
+
+            <h3>Request Body (JSON)</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>line_items</strong></td>
+                            <td>Array</td>
+                            <td>A list of items the customer is purchasing. Must contain <code>price_data.unit_amount</code> in cents.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>success_url</strong></td>
+                            <td>String</td>
+                            <td>The absolute URL to redirect the customer to after a successful payment.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>cancel_url</strong></td>
+                            <td>String</td>
+                            <td>The absolute URL to redirect the customer to if they cancel the checkout.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Response</h3>
+            <pre><code>{
+  "url": "https://your-project.vercel.app/checkout.html?session_id=cs_mock_12345"
+}</code></pre>
+        </section>
+
+        <section id="retrieve-session">
+            <h2><span class="badge method-get">GET</span> Retrieve a Session</h2>
+            <p>Fetch the details of an existing session using its unique ID. Used internally by the checkout page.</p>
+            <p><strong>Endpoint:</strong> <code>/api/checkout/sessions/:id</code></p>
+            
+            <h3>Response</h3>
+            <pre><code>{
+  "id": "cs_mock_12345",
+  "amountTotal": 9900,
+  "status": "open",
+  "successUrl": "http://localhost:4242/success.html"
+}</code></pre>
+        </section>
+
+        <section id="test-cards">
+            <h2>Testing your integration</h2>
+            <p>NexusPay provides mock credit card numbers for testing your integration without moving real money. Use these numbers on the Hosted Checkout page.</p>
+            
+            <div class="info-box">
+                <h4>Test Mode Active</h4>
+                <p>The gateway is currently running in local development mode. No real charges will be created.</p>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Card Brand</th>
+                            <th>Number</th>
+                            <th>CVC</th>
+                            <th>Expiry</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Visa (Success)</strong></td>
+                            <td><code>4242 4242 4242 4242</code></td>
+                            <td>Any 3 digits</td>
+                            <td>Any future date</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mastercard (Success)</strong></td>
+                            <td><code>5555 5555 5555 4444</code></td>
+                            <td>Any 3 digits</td>
+                            <td>Any future date</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <p style="margin-top: 40px; text-align: center; font-size: 0.875rem;">
+                © 2026 NexusPay Inc. Building the future of payments.
+            </p>
+        </section>
+    </main>
+
+</body>
+</html>

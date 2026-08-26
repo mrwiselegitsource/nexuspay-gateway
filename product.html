@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Headphones - Product Page</title>
+    <link rel="stylesheet" href="product.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">MyStore</div>
+        <div class="cart">Cart (0)</div>
+    </nav>
+
+    <div class="product-container">
+        <div class="product-image">
+            <!-- Using a standard SVG as a placeholder for a product -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+            </svg>
+        </div>
+        <div class="product-details">
+            <span class="category">Audio</span>
+            <h1>Studio Pro Wireless Headphones</h1>
+            <p class="description">
+                Experience industry-leading noise cancellation and premium sound quality. Designed for all-day comfort with 30 hours of battery life.
+            </p>
+            <div class="price">$99.00</div>
+            
+            <!-- This is the crucial part: Calling the Node.js API to create a Stripe Checkout Session -->
+            <button id="checkout-button" class="buy-button" style="width: 100%; border: none; cursor: pointer; font-family: inherit;">Buy Now</button>
+            
+            <div class="features">
+                <ul>
+                    <li>✓ Active Noise Cancellation</li>
+                    <li>✓ 30-hour battery life</li>
+                    <li>✓ Built-in microphone</li>
+                    <li>✓ Free shipping</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const checkoutButton = document.getElementById('checkout-button');
+        
+        checkoutButton.addEventListener('click', async () => {
+            // Update button UI while loading
+            checkoutButton.textContent = 'Loading securely...';
+            checkoutButton.style.opacity = '0.7';
+            
+            try {
+                // Call our Custom Gateway backend dynamically using relative paths
+                const baseUrl = window.location.origin;
+                const response = await fetch('/api/checkout/sessions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        line_items: [{ price_data: { unit_amount: 9900 } }],
+                        success_url: `${baseUrl}/success.html`,
+                        cancel_url: `${baseUrl}/cancel.html`
+                    })
+                });
+                
+                const session = await response.json();
+                
+                if (session.url) {
+                    // Redirect to the Custom Hosted Checkout page
+                    window.location.href = session.url;
+                } else {
+                    alert('Server Error: ' + (session.error || 'Unknown error occurred.'));
+                    checkoutButton.textContent = 'Buy Now';
+                    checkoutButton.style.opacity = '1';
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Could not connect to the backend server. Make sure server.js is running (node server.js).');
+                checkoutButton.textContent = 'Buy Now';
+                checkoutButton.style.opacity = '1';
+            }
+        });
+    </script>
+</body>
+</html>
