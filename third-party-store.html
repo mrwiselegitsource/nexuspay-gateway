@@ -33,16 +33,19 @@
             // EXACT CODE COPIED DIRECTLY FROM OUR docs.html QUICKSTART
             // ========================================================
             try {
-                const baseUrl = window.location.origin;
-                const response = await fetch('/api/checkout/sessions', {
+                // Hardcode the absolute live Vercel URL so this file works from anywhere (even a desktop file://)
+                const gatewayUrl = 'https://nexuspay-gateway-post.vercel.app';
+                
+                const response = await fetch(`${gatewayUrl}/api/checkout/sessions`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         line_items: [{ 
                             price_data: { unit_amount: 4500 } // $45.00
                         }],
-                        success_url: `${baseUrl}/success.html`,
-                        cancel_url: `${baseUrl}/cancel.html`
+                        // Redirect back to the gateway's success page for testing
+                        success_url: `${gatewayUrl}/success.html`,
+                        cancel_url: `${gatewayUrl}/cancel.html`
                     })
                 });
 
