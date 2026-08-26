@@ -4,7 +4,8 @@ const crypto = require('crypto');
 const app = express();
 
 app.use(cors());
-app.use(express.static('.')); 
+const path = require('path');
+app.use(express.static(__dirname)); 
 app.use(express.json());
 
 // In-memory database to store active payment sessions (Note: resets on Vercel cold starts)
