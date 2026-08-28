@@ -24,17 +24,30 @@
     </div>
 
     <script>
+        // Check if the payment gateway just threw us back here after a successful payment
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('status') === 'success') {
+            document.body.innerHTML = `
+                <div class="product-card" style="text-align: center; margin-top: 100px;">
+                    <h2 style="color: #2e7d32;">Payment Successful!</h2>
+                    <p>Thank you for your purchase from Awesome Widgets Inc.</p>
+                    <p>The Gateway has successfully thrown you back to the merchant's website.</p>
+                </div>
+            `;
+        }
+
         document.getElementById('buy-btn').addEventListener('click', async () => {
             const btn = document.getElementById('buy-btn');
-            btn.innerText = "Connecting to Gateway...";
-            btn.style.opacity = '0.7';
-            
+            btn.textContent = 'Redirecting to Gateway...';
+            btn.disabled = true;
+
             // ========================================================
             // EXACT CODE COPIED DIRECTLY FROM OUR docs.html QUICKSTART
             // ========================================================
             try {
                 // Hardcode the absolute live Vercel URL so this file works from anywhere (even a desktop file://)
                 const gatewayUrl = 'https://nexuspay-gateway-post.vercel.app';
+                const merchantUrl = window.location.href.split('?')[0]; // The URL of THIS merchant page
                 
                 const response = await fetch(`${gatewayUrl}/api/checkout/sessions`, {
                     method: 'POST',
@@ -43,9 +56,9 @@
                         line_items: [{ 
                             price_data: { unit_amount: 4500 } // $45.00
                         }],
-                        // Redirect back to the gateway's success page for testing
-                        success_url: `${gatewayUrl}/success.html`,
-                        cancel_url: `${gatewayUrl}/cancel.html`
+                        // Redirect back to THIS merchant's website upon success/cancel (Just like Stripe!)
+                        success_url: `${merchantUrl}?status=success`,
+                        cancel_url: `${merchantUrl}?status=cancelled`
                     })
                 });
 
