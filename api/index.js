@@ -23,6 +23,24 @@ app.post('/api/checkout/sessions', (req, res) => {
   try {
     const { line_items, success_url, cancel_url } = req.body;
     
+    // Strict Validation: Ensure the user's app sent a valid payload
+    if (!line_items || !Array.isArray(line_items) || line_items.length === 0) {
+      return res.status(400).json({ error: "Invalid payload: 'line_items' is required and must be an array." });
+    }
+
+    let calculatedAmountTotal = 0;
+    for (let i = 0; i < line_items.length; i++) {
+        const item = line_items[i];
+        if (!item.price_data || typeof item.price_data.unit_amount !== 'number') {
+            return res.status(400).json({ error: `Invalid payload: line_items[${i}] is missing a valid numeric 'price_data.unit_amount'.` });
+        }
+        calculatedAmountTotal += item.price_data.unit_amount;
+    }
+
+    if (calculatedAmountTotal <= 0) {
+        return res.status(400).json({ error: "Invalid payload: Total amount must be greater than 0." });
+    }
+
     // Generate a mock session ID just like Stripe does (e.g. cs_test_123...)
     const sessionId = 'cs_mock_' + crypto.randomBytes(16).toString('hex');
     
@@ -30,7 +48,7 @@ app.post('/api/checkout/sessions', (req, res) => {
     sessions.set(sessionId, {
       id: sessionId,
       lineItems: line_items,
-      amountTotal: line_items[0].price_data.unit_amount,
+      amountTotal: calculatedAmountTotal,
       successUrl: success_url,
       cancelUrl: cancel_url,
       status: 'open'
